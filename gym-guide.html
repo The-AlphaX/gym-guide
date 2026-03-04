@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Beginner Gym Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0d0d0d;
+    --surface: #161616;
+    --surface2: #1e1e1e;
+    --accent: #e8ff3c;
+    --accent2: #ff5c3a;
+    --text: #f0f0f0;
+    --muted: #888;
+    --border: #2a2a2a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+
+  /* HEADER */
+  .hero {
+    background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 100%);
+    border-bottom: 2px solid var(--accent);
+    padding: 36px 20px 28px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(232,255,60,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: var(--accent);
+    color: #000;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+  }
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 10vw, 80px);
+    line-height: 0.9;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+  }
+  .hero h1 span { color: var(--accent); }
+  .hero p {
+    color: var(--muted);
+    font-size: 13px;
+    letter-spacing: 0.5px;
+  }
+
+  /* NAV TABS */
+  .tabs {
+    display: flex;
+    gap: 0;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    scrollbar-width: none;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    flex: 0 0 auto;
+    padding: 14px 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* SECTIONS */
+  .section { display: none; padding: 24px 16px; max-width: 700px; margin: 0 auto; }
+  .section.active { display: block; }
+
+  /* RULES */
+  .rules-grid { display: grid; gap: 10px; }
+  .rule-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .rule-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    color: var(--accent);
+    line-height: 1;
+    flex-shrink: 0;
+    width: 36px;
+  }
+  .rule-text { font-size: 14px; line-height: 1.5; }
+  .rule-text strong { color: var(--accent); }
+
+  /* SECTION TITLES */
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  .section-title span { color: var(--accent); }
+  .section-sub {
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    margin-bottom: 22px;
+  }
+
+  /* SCHEDULE */
+  .week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-bottom: 20px; }
+  .day-pill {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 4px;
+    text-align: center;
+    font-size: 10px;
+  }
+  .day-pill .day-name {
+    color: var(--muted);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+  }
+  .day-pill .day-type {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    line-height: 1;
+  }
+  .day-pill.type-a .day-type { color: #5eb8ff; }
+  .day-pill.type-b .day-type { color: #ff7b54; }
+  .day-pill.type-rest .day-type { color: var(--muted); }
+
+  .info-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+  .info-box strong { color: var(--text); }
+
+  /* EXERCISE BADGE */
+  .day-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 18px;
+  }
+  .day-label.a { border-color: #5eb8ff33; color: #5eb8ff; }
+  .day-label.b { border-color: #ff7b5433; color: #ff7b54; }
+
+  /* EXERCISE CARDS */
+  .ex-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin-bottom: 14px;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 110px 1fr;
+  }
+  .ex-img {
+    width: 110px;
+    height: 110px;
+    object-fit: cover;
+    background: var(--surface2);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+  }
+  .ex-img img {
+    width: 110px;
+    height: 110px;
+    object-fit: cover;
+  }
+  .ex-body {
+    padding: 14px 14px;
+  }
+  .ex-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    margin-bottom: 3px;
+  }
+  .ex-name {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    line-height: 1.2;
+  }
+  .ex-muscle {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .ex-stats {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .stat-pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.3px;
+  }
+  .ex-tip {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 8px;
+    line-height: 1.5;
+    border-top: 1px solid var(--border);
+    padding-top: 8px;
+  }
+  .new-badge {
+    display: inline-block;
+    background: var(--accent2);
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  /* CARDIO */
+  .cardio-card {
+    background: linear-gradient(135deg, #1a1a1a 0%, #141414 100%);
+    border: 1px solid var(--accent2);
+    border-radius: 16px;
+    padding: 22px;
+    margin-bottom: 16px;
+  }
+  .cardio-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: var(--accent2);
+    margin-bottom: 16px;
+  }
+  .cardio-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .cstat {
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 14px 10px;
+    text-align: center;
+  }
+  .cstat-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .cstat-label { font-size: 10px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 4px; }
+  .cardio-note {
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+    padding: 12px;
+    background: var(--surface2);
+    border-radius: 10px;
+  }
+
+  /* PROGRESS */
+  .progress-timeline { display: grid; gap: 12px; }
+  .prog-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+  .prog-time {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    color: var(--accent);
+    line-height: 1.1;
+    text-align: center;
+    padding-top: 2px;
+  }
+  .prog-time small { font-size: 11px; font-family: 'DM Sans', sans-serif; color: var(--muted); display: block; font-weight: 400; }
+  .prog-items { display: grid; gap: 4px; }
+  .prog-item {
+    font-size: 13px;
+    color: var(--muted);
+    padding-left: 12px;
+    position: relative;
+    line-height: 1.5;
+  }
+  .prog-item::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 8px;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  /* FOOD */
+  .food-grid { display: grid; gap: 12px; }
+  .food-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+  }
+  .food-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .food-icon { font-size: 22px; }
+  .food-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.5px;
+  }
+  .food-items { display: flex; flex-wrap: wrap; gap: 8px; }
+  .food-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 5px 12px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .food-item.highlight { border-color: rgba(232,255,60,0.2); color: var(--text); }
+  .food-card.avoid { border-color: rgba(255,92,58,0.3); }
+  .food-card.avoid .food-title { color: var(--accent2); }
+  .food-card.avoid .food-item { border-color: rgba(255,92,58,0.2); color: #ff9880; }
+
+  /* ALERT BOX */
+  .alert {
+    background: rgba(255,92,58,0.08);
+    border: 1px solid rgba(255,92,58,0.3);
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #ff9880;
+    margin-bottom: 20px;
+  }
+  .alert strong { color: var(--accent2); }
+
+  /* FINAL TIPS */
+  .tips-grid { display: grid; gap: 10px; }
+  .tip-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    font-size: 14px;
+    line-height: 1.6;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .tip-icon { font-size: 20px; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">🏋️ Baby Mode · Reviewed &amp; Updated</div>
+  <h1>BEGINNER<br/><span>GYM GUIDE</span></h1>
+  <p>Save this page · Open in gym · Follow exactly</p>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('rules')">Rules</div>
+  <div class="tab" onclick="showTab('schedule')">Schedule</div>
+  <div class="tab" onclick="showTab('dayA')">Day A · Upper</div>
+  <div class="tab" onclick="showTab('dayB')">Day B · Legs</div>
+  <div class="tab" onclick="showTab('cardio')">Cardio</div>
+  <div class="tab" onclick="showTab('food')">Food</div>
+  <div class="tab" onclick="showTab('progress')">Progress</div>
+</div>
+
+<!-- RULES -->
+<div class="section active" id="tab-rules">
+  <div class="section-title">NON-<span>NEGOTIABLE</span></div>
+  <div class="section-sub">Read these every time. They matter.</div>
+  <div class="rules-grid">
+    <div class="rule-card"><div class="rule-num">1</div><div class="rule-text">You are <strong>learning</strong>, not showing off. Ego is the enemy.</div></div>
+    <div class="rule-card"><div class="rule-num">2</div><div class="rule-text"><strong>Light weights are correct.</strong> Master form first, add weight later.</div></div>
+    <div class="rule-card"><div class="rule-num">3</div><div class="rule-text">Muscle soreness = OK. <strong>Joint pain = STOP immediately.</strong></div></div>
+    <div class="rule-card"><div class="rule-num">4</div><div class="rule-text"><strong>Slow and controlled reps only.</strong> 2 seconds up, 3 seconds down.</div></div>
+    <div class="rule-card"><div class="rule-num">5</div><div class="rule-text"><strong>Consistency beats motivation.</strong> Show up on low-energy days.</div></div>
+    <div class="rule-card"><div class="rule-num">6</div><div class="rule-text"><strong>Don't change exercises</strong> for 4–6 weeks. Let the body adapt.</div></div>
+  </div>
+</div>
+
+<!-- SCHEDULE -->
+<div class="section" id="tab-schedule">
+  <div class="section-title">WEEKLY <span>PLAN</span></div>
+  <div class="section-sub">2 day types only · 60–75 min per session</div>
+  <div class="week-grid">
+    <div class="day-pill type-a"><div class="day-name">MON</div><div class="day-type">A</div></div>
+    <div class="day-pill type-b"><div class="day-name">TUE</div><div class="day-type">B</div></div>
+    <div class="day-pill type-rest"><div class="day-name">WED</div><div class="day-type">REST</div></div>
+    <div class="day-pill type-a"><div class="day-name">THU</div><div class="day-type">A</div></div>
+    <div class="day-pill type-b"><div class="day-name">FRI</div><div class="day-type">B</div></div>
+    <div class="day-pill type-rest"><div class="day-name">SAT</div><div class="day-type">WALK</div></div>
+    <div class="day-pill type-rest"><div class="day-name">SUN</div><div class="day-type">REST</div></div>
+  </div>
+  <div class="info-box">
+    <strong>Day A = Upper Body</strong> — Back, Chest, Shoulders, Arms<br/>
+    <strong>Day B = Legs + Core</strong> — Quads, Hamstrings, Calves, Abs<br/><br/>
+    Do <strong>cardio (30 min treadmill)</strong> after weights OR on rest/walk days. See the Cardio tab.
+  </div>
+  <div class="info-box">
+    <strong>Missed a day?</strong> Don't double up. Just continue with the next session. Missing one day never hurt anyone — missing a whole week does.
+  </div>
+</div>
+
+<!-- DAY A -->
+<div class="section" id="tab-dayA">
+  <div class="section-title">DAY A — <span>UPPER BODY</span></div>
+  <div class="section-sub">Do in this exact order · 3 sets · 10–12 reps · Rest 60–90 sec between sets</div>
+
+  <div class="alert"><strong>⚠️ One fix made:</strong> The original guide had no bicep exercise. That's a big gap — biceps are a key pulling muscle. Dumbbell Bicep Curls have been added as #8.</div>
+
+  <div class="day-label a">💪 Day A · Upper Body · 8 Exercises</div>
+
+  <!-- 1 -->
+  <div class="ex-card">
+    <div class="ex-img"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lat_Pulldown/0.jpg" onerror="this.parentNode.innerHTML='🔙'" alt="Lat Pulldown"/></div>
+    <div class="ex-body">
+      <div class="ex-num">EXERCISE 01</div>
+      <div class="ex-name">Lat Pulldown Machine</div>
+      <div class="ex-muscle">🎯 Back (Lats)</div>
+      <div class="ex-stats">
+        <span class="stat-pill">3 Sets</span>
+        <span class="stat-pill">10–12 Reps</span>
+        <span class="stat-pill">60–90s Rest</span>
+      </div>
+      <div class="ex-tip">Sit → grab bar wide → pull to upper chest → release slowly. Don't lean too far back.</div>
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div class="ex-card">
+    <div class="ex-img"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Cable_Row/0.jpg" onerror="this.parentNode.innerHTML='🚣'" alt="Seated Row"/></div>
+    <div class="ex-body">
+      <div class="ex-num">EXERCISE 02</div>
+      <div class="ex-name">Seated Cable Row</div>
+      <div class="ex-muscle">🎯 Back (Mid)</div>
+      <div class="ex-stats">
+        <span class="stat-pill">3 Sets</span>
+        <span class="stat-pill">10–12 Reps</span>
+        <span class="stat-pill">60–90s Rest</span>
+      </div>
+      <div class="ex-tip">Sit upright → pull handle to belly → squeeze shoulder blades together → release slowly.</div>
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="ex-card">
+    <div class="ex-img"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Barbell_Bench_Press_-_Medium_Grip/0.jpg" onerror="this.parentNode.innerHTML='🏋️'" alt="Chest Press"/></div>
+    <div class="ex-body">
+      <div class="ex-num">EXERCISE 03</div>
+      <div class="ex-name">Chest Press (Machine or Dumbbells)</div>
+      <div class="ex-muscle">🎯 Chest</div>
+      <div class="ex-stats">
+        <span class="stat-pill">3 Sets</span>
+        <span class="stat-pill">10–12 Reps</span>
+        <span class="stat-pill">60–90s Rest</span>
+      </div>
+      <div class="ex-tip">Use the chest press machine first month. Push forward/up → lower slowly. Don't lock elbows at top.</div>
+    </div>
+  </div>
+
+  <!-- 4 -->
+  <div class="ex-card">
+    <div class="ex-img"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dumbbell_Incline_Press/0.jpg" onerror="this.parentNode.innerHTML='📐'" alt="Incline Press"/></div>
+    <div class="ex-body">
+      <div class="ex-num">EXERCISE 04</div>
+      <div class="ex-name">Incline Dumbbell Press</div>
+      <div class="ex-muscle">🎯 Upper Chest</div>
+      <div class="ex-stats">
+        <span class="stat-pill">3 Sets</span>
+        <span class="stat-pill">10–12 Reps</span>
+        <span class="stat-pill">60–90s Rest</span>
+      </div>
+      <div class="ex-tip">Set bench to ~30–45°. Push dumbbells up and slightly inward → lower slowly. Keep feet flat on floor.</div>
+    </div>
+  </div>
+
+  <!-- 5 -->
+  <div class="ex-card">
+    <div class="ex-img"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dumbbell_Shoulder_Press/0.jpg" onerror="this.parentNode.innerHTML='🏔️'" alt="Shoulder Press"/></div>
+    <div class="ex-body">
+      <div class="ex-num">EXERCISE 05</div>
+      <div class="ex-name">Dumbbell Shoulder Press</div>
+      <div class="ex-muscle">🎯 Shoulders (Front + Side)</div>
+      <div class="ex-stats">
+        <span class="stat-pill">3 Sets</span>
+        <span class="stat-pill">10–12 Reps</span>
+        <span class="stat-pill">60–90s Rest</span>
+      </div>
+      <div class="ex-tip">Sit on a bench with back support. Push dumbbells overhead → don't fully lock out → lower to ear level.</div>
+    </div>
+  </div>
+
+  <!-- 6 -->
+  <div class="ex-card">
+    <div class="ex-img"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dumbbell_Lateral_Raise/0.jpg" onerror="this.parentNode.innerHTML='↔️'" alt="Lateral Raise"/></div>
+    <div class="ex-body">
+      <div class="ex-num">EXERCISE 06</div>
+      <div class="ex-name">Dumbbell Lateral Raise</div>
+      <div class="ex-muscle">🎯 Side Shoulders</div>
+      <div class="ex-stats">
+        <span class="stat-pill">3 Sets</span>
+        <span class="stat-pill">12–15 Reps</span>
+        <span class="stat-pill">60s Rest</span>
+      </div>
+      <div class="ex-tip">Use very light weight. Raise arms sideways to shoulder height only → lower slowly. Slight forward lean is fine.</div>
+    </div>
+  </div>
+
+  <!-- 7 -->
+  <div class="ex-card">
+    <div class="ex-img"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Cable_Pushdown/0.jpg" onerror="this.parentNode.innerHTML='⬇️'" alt="Triceps Pushdown"/></div>
+    <div class="ex-body">
+      <div class="ex-num">EXERCISE 07</div>
+      <div class="ex-name">Triceps Pushdown (Cable)</div>
+      <div class="ex-muscle">🎯 Triceps</div>
+      <div class="ex-stats">
+        <span class="stat-pill">3 Sets</span>
+        <span class="stat-pill">12 Reps</span>
+        <span class="stat-pill">60s Rest</span>
+      </div>
+      <div class="ex-tip">Keep elbows pinned to your sides. Push bar/rope straight down → let it rise slowly. Only your forearms move.</div>
+    </div>
+  </div>
+
+  <!-- 8 - NEW -->
+  <div class="ex-card" style="border-color: rgba(255,92,58,0.4);">
+    <div class="ex-img"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dumbbell_Alternate_Bicep_Curl/0.jpg" onerror="this.parentNode.innerHTML='💪'" alt="Bicep Curl"/></div>
+    <div class="ex-body">
+      <div class="ex-num">EXERCISE 08</div>
+      <div class="ex-name">Dumbbell Bicep Curl <span class="new-badge">Added</span></div>
+      <div class="ex-muscle">🎯 Biceps</div>
+      <div class="ex-stats">
+        <span class="stat-pill">3 Sets</span>
+        <span class="stat-pill">10–12 Reps</span>
+        <span class="stat-pill">60s Rest</span>
+      </div>
+      <div class="ex-tip">Stand or sit. Curl both dumbbells up → squeeze at top → lower slowly. Keep elbows against your body — don't swing!</div>
+    </div>
+  </div>
+</div>
+
+<!-- DAY B -->
+<div class="section" id="tab-dayB">
+  <div class="section-title">DAY B — <span>LEGS + CORE</span></div>
+  <div class="section-sub">Do in this exact order · Follow individual set/rep counts below</div>
+
+  <div class="day-label b">🦵 Day B · Legs + Core · 6 Exercises</div>
+
+  <!-- 1 -->
+  <div class="ex-card">
+    <div class="ex-img"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Leg_Press/0.jpg" onerror="this.parentNode.innerHTML='🦵'" alt="Leg Press"/></div>
+    <div class="ex-body">
+      <div class="ex-num">EXERCISE 01</div>
+      <div class="ex-name">Leg Press Machine</div>
+      <div class="ex-muscle">🎯 Quads, Glutes</div>
+      <div class="ex-stats">
+        <span class="stat-pill">4 Sets</span>
+        <span class="stat-pill">10 Reps</span>
+        <span class="stat-pill">90s Rest</span>
+      </div>
+      <div class="ex-tip">Feet shoulder-width on platform → lower slowly until 90° → push through heels. Don't lock knees at top.</div>
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div class="ex-card">
+    <div class="ex-img"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bodyweight_Squat/0.jpg" onerror="this.parentNode.innerHTML='🪑'" alt="Squat"/></div>
+    <div class="ex-body">
+      <div class="ex-num">EXERCISE 02</div>
+      <div class="ex-name">Bodyweight Squat</div>
+      <div class="ex-muscle">🎯 Quads, Glutes, Core</div>
+      <div class="ex-stats">
+        <span class="stat-pill">3 Sets</span>
+        <span class="stat-pill">12 Reps</span>
+        <span class="stat-pill">60s Rest</span>
+      </div>
+      <div class="ex-tip">Feet shoulder-width → sit back like lowering into a chair → knees track over toes → drive through heels to stand. Master this for 1 month before adding weight.</div>
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="ex-card">
+    <div class="ex-img"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Romanian_Deadlift/0.jpg" onerror="this.parentNode.innerHTML='🏗️'" alt="Deadlift"/></div>
+    <div class="ex-body">
+      <div class="ex-num">EXERCISE 03</div>
+      <div class="ex-name">Dumbbell Romanian Deadlift</div>
+      <div class="ex-muscle">🎯 Hamstrings, Glutes, Lower Back</div>
+      <div class="ex-stats">
+        <span class="stat-pill">3 Sets</span>
+        <span class="stat-pill">10 Reps</span>
+        <span class="stat-pill">90s Rest</span>
+      </div>
+      <div class="ex-tip">Hold dumbbells in front → push hips back (not down!) → lower until you feel hamstring stretch → squeeze glutes to stand. Keep back straight throughout.</div>
+    </div>
+  </div>
+
+  <!-- 4 -->
+  <div class="ex-card">
+    <div class="ex-img"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Calf_Raises/0.jpg" onerror="this.parentNode.innerHTML='🦶'" alt="Calf Raise"/></div>
+    <div class="ex-body">
+      <div class="ex-num">EXERCISE 04</div>
+      <div class="ex-name">Standing Calf Raises</div>
+      <div class="ex-muscle">🎯 Calves</div>
+      <div class="ex-stats">
+        <span class="stat-pill">4 Sets</span>
+        <span class="stat-pill">15 Reps</span>
+        <span class="stat-pill">60s Rest</span>
+      </div>
+      <div class="ex-tip">Rise up on toes as high as possible → hold for 1 second at top → come down slowly. Do on a step edge for full range.</div>
+    </div>
+  </div>
+
+  <!-- 5 -->
+  <div class="ex-card">
+    <div class="ex-img"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Plank/0.jpg" onerror="this.parentNode.innerHTML='📏'" alt="Plank"/></div>
+    <div class="ex-body">
+      <div class="ex-num">EXERCISE 05</div>
+      <div class="ex-name">Plank</div>
+      <div class="ex-muscle">🎯 Core, Abs</div>
+      <div class="ex-stats">
+        <span class="stat-pill">3 Sets</span>
+        <span class="stat-pill">30–45s Hold</span>
+        <span class="stat-pill">60s Rest</span>
+      </div>
+      <div class="ex-tip">Elbows under shoulders → body in a straight line → squeeze core and glutes → breathe normally. Don't let hips sag or rise.</div>
+    </div>
+  </div>
+
+  <!-- 6 -->
+  <div class="ex-card">
+    <div class="ex-img"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hanging_Knee_Raise/0.jpg" onerror="this.parentNode.innerHTML='🧗'" alt="Knee Raises"/></div>
+    <div class="ex-body">
+      <div class="ex-num">EXERCISE 06</div>
+      <div class="ex-name">Lying Leg Raises</div>
+      <div class="ex-muscle">🎯 Lower Abs</div>
+      <div class="ex-stats">
+        <span class="stat-pill">3 Sets</span>
+        <span class="stat-pill">12 Reps</span>
+        <span class="stat-pill">60s Rest</span>
+      </div>
+      <div class="ex-tip">Lie flat on mat → raise legs to 90° → lower slowly without touching the floor. Keep lower back pressed into mat. Too easy? Try hanging from a bar.</div>
+    </div>
+  </div>
+</div>
+
+<!-- CARDIO -->
+<div class="section" id="tab-cardio">
+  <div class="section-title">CARDIO — <span>MANDATORY</span></div>
+  <div class="section-sub">Fat loss only happens with this. 15 mins is not enough.</div>
+
+  <div class="cardio-card">
+    <div class="cardio-title">🏃 TREADMILL INCLINE WALK</div>
+    <div class="cardio-stats">
+      <div class="cstat"><div class="cstat-val">5–6</div><div class="cstat-label">Speed</div></div>
+      <div class="cstat"><div class="cstat-val">6–10</div><div class="cstat-label">Incline</div></div>
+      <div class="cstat"><div class="cstat-val">30</div><div class="cstat-label">Minutes</div></div>
+    </div>
+    <div class="cardio-note">
+      ✅ Do <strong>after weights</strong> on gym days<br/>
+      ✅ Or do on <strong>rest/walk days</strong> as standalone<br/>
+      ❌ Don't skip — this is what burns fat while you sleep
+    </div>
+  </div>
+
+  <div class="info-box">
+    <strong>Why incline walking?</strong><br/>
+    Incline walking burns almost as many calories as jogging but with zero impact on your knees and joints. Perfect for beginners. It also works your glutes and hamstrings as a bonus.
+  </div>
+</div>
+
+<!-- FOOD -->
+<div class="section" id="tab-food">
+  <div class="section-title">FOOD — <span>SIMPLE</span></div>
+  <div class="section-sub">Fat loss + muscle. No cooking needed.</div>
+
+  <div class="food-grid">
+    <div class="food-card">
+      <div class="food-header"><div class="food-icon">🎯</div><div class="food-title">Daily Targets</div></div>
+      <div class="food-items">
+        <span class="food-item highlight">Eat 3–4 times/day</span>
+        <span class="food-item highlight">Protein every meal</span>
+        <span class="food-item highlight">Stop at 80% full</span>
+        <span class="food-item highlight">3–4 L water/day</span>
+      </div>
+    </div>
+
+    <div class="food-card" style="border-color: rgba(94,184,255,0.3)">
+      <div class="food-header"><div class="food-icon">💪</div><div class="food-title" style="color:#5eb8ff">Protein (Most Important)</div></div>
+      <div class="food-items">
+        <span class="food-item">4–6 Boiled Eggs/day</span>
+        <span class="food-item">Paneer 150–200g</span>
+        <span class="food-item">Grilled Chicken</span>
+        <span class="food-item">Whey Protein 1–2 scoops</span>
+      </div>
+    </div>
+
+    <div class="food-card">
+      <div class="food-header"><div class="food-icon">🍚</div><div class="food-title">Carbs (Limited)</div></div>
+      <div class="food-items">
+        <span class="food-item">Rice max 1 cup/meal</span>
+        <span class="food-item">Roti max 2</span>
+        <span class="food-item">Oats (no sugar)</span>
+      </div>
+    </div>
+
+    <div class="food-card">
+      <div class="food-header"><div class="food-icon">🥗</div><div class="food-title">Vegetables (Unlimited)</div></div>
+      <div class="food-items">
+        <span class="food-item">Cucumber</span>
+        <span class="food-item">Tomato</span>
+        <span class="food-item">Carrot</span>
+        <span class="food-item">Salad packs</span>
+      </div>
+    </div>
+
+    <div class="food-card">
+      <div class="food-header"><div class="food-icon">☕</div><div class="food-title">Drinks OK</div></div>
+      <div class="food-items">
+        <span class="food-item">Water 3–4 L/day</span>
+        <span class="food-item">Black Coffee</span>
+        <span class="food-item">Green Tea</span>
+      </div>
+    </div>
+
+    <div class="food-card avoid">
+      <div class="food-header"><div class="food-icon">❌</div><div class="food-title">Avoid These</div></div>
+      <div class="food-items">
+        <span class="food-item">Cold drinks / Soda</span>
+        <span class="food-item">Sweets / Mithai</span>
+        <span class="food-item">Fried food</span>
+        <span class="food-item">Alcohol</span>
+        <span class="food-item">Packaged snacks</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="section" id="tab-progress">
+  <div class="section-title">WHAT TO <span>EXPECT</span></div>
+  <div class="section-sub">Be patient. Results are real but not instant.</div>
+
+  <div class="progress-timeline">
+    <div class="prog-card">
+      <div class="prog-time">2<small>WEEKS</small></div>
+      <div class="prog-items">
+        <div class="prog-item">Slight muscle soreness (good sign)</div>
+        <div class="prog-item">More sweating than normal</div>
+        <div class="prog-item">Better, deeper sleep</div>
+        <div class="prog-item">More energy during the day</div>
+      </div>
+    </div>
+    <div class="prog-card">
+      <div class="prog-time">1<small>MONTH</small></div>
+      <div class="prog-items">
+        <div class="prog-item">Face looks less puffy/tired</div>
+        <div class="prog-item">Clothes feel slightly looser</div>
+        <div class="prog-item">Noticeably stronger in gym</div>
+      </div>
+    </div>
+    <div class="prog-card">
+      <div class="prog-time">3<small>MONTHS</small></div>
+      <div class="prog-items">
+        <div class="prog-item">Visible body shape change</div>
+        <div class="prog-item">Confidence improves noticeably</div>
+        <div class="prog-item">People start noticing</div>
+      </div>
+    </div>
+    <div class="prog-card">
+      <div class="prog-time">6–12<small>MONTHS</small></div>
+      <div class="prog-items">
+        <div class="prog-item">Visible abs (with consistent diet)</div>
+        <div class="prog-item">Significantly stronger body</div>
+        <div class="prog-item">Much better posture</div>
+        <div class="prog-item">Complete lifestyle change</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top: 20px;">
+    <div class="section-title" style="font-size:24px; margin-bottom: 14px;">FINAL <span>REMINDERS</span></div>
+    <div class="tips-grid">
+      <div class="tip-card"><div class="tip-icon">🔁</div><div>Don't change exercises for 4–6 weeks. Boredom is part of the process.</div></div>
+      <div class="tip-card"><div class="tip-icon">⚖️</div><div>Don't chase heavy weights. Light weight with perfect form builds more muscle.</div></div>
+      <div class="tip-card"><div class="tip-icon">🚶</div><div>Show up even on low-energy days. Half a workout is infinitely better than none.</div></div>
+      <div class="tip-card"><div class="tip-icon">📱</div><div>Confused in the gym? Open this file and follow it step by step.</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+function showTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
